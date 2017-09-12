@@ -1,0 +1,16 @@
+# IDE
+.vscode/
+
+# TS/Node
+node_modules/
+out/
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Misc
+.tmp
+*.js.map

@@ -1,0 +1,48 @@
+{
+    "name": "coincoin",
+    "engines": {
+        "node": "8.x.x"
+    },
+    "ava": {
+        "files": [
+            "out/tests/**/*.js",
+            "!out/tests/**/index.js",
+            "!out/tests/**/samples/*"
+        ],
+        "sources": [
+            "out/tests/**/*.{js}"
+        ],
+        "verbose": true,
+        "failFast": true,
+        "failWithoutAssertions": false
+    },
+    "scripts": {
+        "start": "NODE_ENV=production micro out",
+        "dev": "NODE_ENV=development micro-dev out",
+        "test": "NODE_ENV=development ava",
+        "typeorm": "typeorm"
+    },
+    "dependencies": {
+        "axios": "latest",
+        "bee-queue": "^1.1.0",
+        "cheerio": "^1.0.0-rc.2",
+        "decimal.js": "^7.2.4",
+        "micro": "latest",
+        "microrouter": "latest",
+        "mongoose": "^4.11.11",
+        "mysql": "^2.14.1",
+        "reflect-metadata": "^0.1.10",
+        "sleep-promise": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/mongoose": "^4.7.21",
+        "@types/node": "^8.0.27",
+        "@types/sinon": "^2.3.3",
+        "ava": "^0.22.0",
+        "axios-mock-adapter": "^1.9.0",
+        "eslint": "^4.6.1",
+        "micro-dev": "latest",
+        "sinon": "^3.2.1",
+        "source-map-support": "^0.4.17"
+    }
+}

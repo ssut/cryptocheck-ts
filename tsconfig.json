@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "lib": ["es2015", "es2017"],
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowJs": true,
+        "sourceMap": true,
+        "outDir": "out"
+    },
+    "exclude": [
+        "node_modules",
+        "out"
+    ]
+}
