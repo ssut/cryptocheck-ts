@@ -20,13 +20,17 @@
         "start": "NODE_ENV=production micro out",
         "dev": "NODE_ENV=development micro-dev out",
         "test": "NODE_ENV=development ava",
+        "worker": "node out/tasks",
+        "scheduler": "node out/tasks/scheduler",
         "typeorm": "typeorm"
     },
     "dependencies": {
         "axios": "latest",
         "bee-queue": "^1.1.0",
         "cheerio": "^1.0.0-rc.2",
+        "cron": "^1.3.0",
         "decimal.js": "^7.2.4",
+        "logplease": "^1.2.14",
         "micro": "^9.0.0",
         "microrouter": "latest",
         "mongoose": "^4.11.11",
@@ -35,6 +39,7 @@
         "sleep-promise": "^2.0.0"
     },
     "devDependencies": {
+        "@types/cron": "^1.2.1",
         "@types/mongoose": "^4.7.21",
         "@types/node": "^8.0.27",
         "@types/sinon": "^2.3.3",

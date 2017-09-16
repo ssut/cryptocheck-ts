@@ -14,7 +14,8 @@
         "object-literal-sort-keys": false,
         "ordered-imports": false,
         "no-console": false,
-        "only-arrow-functions": false
+        "only-arrow-functions": false,
+        "no-var-requires": false
     },
     "rulesDirectory": []
 }

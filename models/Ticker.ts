@@ -29,4 +29,6 @@ tickerSchema.pre('save', function(next) {
     next();
 });
 
-export const Ticker: mongoose.Model<ITickerModel> = mongoose.model<ITickerModel>('Ticker', tickerSchema);
+export const Ticker: mongoose.Model<ITickerModel> =
+    (mongoose as any).models.Ticker ||
+    mongoose.model<ITickerModel>('Ticker', tickerSchema);
