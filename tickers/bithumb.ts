@@ -1,6 +1,6 @@
 import { TickAPIProvider, ITickAPIProvider } from './base';
 import axios from "axios";
-import { ITicker } from "./models";
+import { ITicker, ITickerItem } from "./models";
 import * as Decimal from 'decimal.js';
 
 export default class BithumbTicker extends TickAPIProvider implements ITickAPIProvider {
@@ -26,14 +26,16 @@ export default class BithumbTicker extends TickAPIProvider implements ITickAPIPr
         result.supported.forEach((coin) => {
             const details = data.data[coin];
             result.details[coin] = {
-                first: new Decimal(details.opening_price).toFixed(),
-                high: new Decimal(details.max_price).toFixed(),
-                last: new Decimal(details.closing_price).toFixed(),
-                low: new Decimal(details.min_price).toFixed(),
+                value: {
+                    first: new Decimal(details.opening_price).toFixed(),
+                    high: new Decimal(details.max_price).toFixed(),
+                    last: new Decimal(details.closing_price).toFixed(),
+                    low: new Decimal(details.min_price).toFixed(),
+                },
                 volume: new Decimal(details.volume_1day).toFixed(8),
                 baseCurrency: 'KRW',
                 nextCurrency: coin,
-            };
+            } as ITickerItem;
         });
 
         return result;

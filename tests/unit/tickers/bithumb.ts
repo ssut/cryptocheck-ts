@@ -9,6 +9,7 @@ test('BithumbTicker -> ITicker', async (t) => {
     const expected = require('./samples/bithumb.expected').default;
     const mock = new MockAdapter(axios);
     mock.onGet('https://api.bithumb.com/public/ticker/ALL').reply(200, sample);
+    const asdf = 1;
 
     // Act
     const ticker = new BithumbTicker('https://api.bithumb.com');
