@@ -9,7 +9,7 @@
         "no-unused-expression": [true],
         "member-access": true,
         "quotemark": [false],
-        "semicolon": ["always"],
+        "semicolon": true,
         "no-duplicate-imports": false,
         "object-literal-sort-keys": false,
         "ordered-imports": false,

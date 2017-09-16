@@ -17,7 +17,7 @@ test('CoinoneTicker -> ITicker', async (t) => {
 
     // Assert
     t.deepEqual(prices, sample);
-    t.deepEqual(actual, expected)
+    t.deepEqual(actual, expected);
 });
 
 test('CoinoneTicker -> RateLimitExceeded -> Error', async (t) => {

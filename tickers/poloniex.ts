@@ -41,4 +41,4 @@ export default class PoloniexTicker extends TickAPIProvider implements ITickAPIP
         return result;
     }
 
-};
+}

@@ -4,17 +4,17 @@ import * as Logger from 'logplease';
 const logger = Logger.create('TaskRunner');
 
 export interface IQueueResult {
-    id: number
-    result: any
-};
+    id: number;
+    result: any;
+}
 
 export interface IBeeQueueJob {
-    id: number|undefined
-    data: object
-    status?: string
-    options?: any
-    queue?: BeeQueue
-    progress?: number
+    id: number|undefined;
+    data: object;
+    status?: string;
+    options?: any;
+    queue?: BeeQueue;
+    progress?: number;
 }
 
 export class Queue {
@@ -78,7 +78,7 @@ export class Queue {
         });
     }
 
-};
+}
 
 if (require.main === module) {
     logger.info('Starting queues...');

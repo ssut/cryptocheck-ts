@@ -37,7 +37,6 @@ export default compose()(router(
         //     await t.save();
         // }
 
-
         // return await Ticker.aggregate([
         //     { $match: { market: { $in: ['bithumb'] } } },
         //     { $group: {

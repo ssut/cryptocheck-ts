@@ -10,4 +10,4 @@ export default interface ITicker {
     high: string;
     low: string;
     first: string;
-};
+}

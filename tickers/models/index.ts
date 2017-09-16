@@ -18,4 +18,4 @@ export interface ITickerItem {
 export interface ITicker {
     supported: string[];
     details: {[key: string]: ITickerItem};
-};
+}
