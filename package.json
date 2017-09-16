@@ -27,7 +27,7 @@
         "bee-queue": "^1.1.0",
         "cheerio": "^1.0.0-rc.2",
         "decimal.js": "^7.2.4",
-        "micro": "latest",
+        "micro": "^9.0.0",
         "microrouter": "latest",
         "mongoose": "^4.11.11",
         "mysql": "^2.14.1",
@@ -41,7 +41,7 @@
         "ava": "^0.22.0",
         "axios-mock-adapter": "^1.9.0",
         "eslint": "^4.6.1",
-        "micro-dev": "latest",
+        "micro-dev": "^1.2.3",
         "sinon": "^3.2.1",
         "source-map-support": "^0.4.17"
     }
