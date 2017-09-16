@@ -6,16 +6,15 @@ export interface ITickerModel extends ITicker, mongoose.Document { }
 
 const decimalGetter = (val) => Decimal(val);
 const decimalSetter = (val) => Decimal(val).toFixed();
-const decimalType = { type: String, get : decimalGetter, set: decimalSetter };
+const decimalType = { type: String, get: decimalGetter, set: decimalSetter };
 
 const tickerSchema = new mongoose.Schema({
-    code: String,
-    market: String,
-    marketName: String,
+    code: { type: String, index: true },
+    market: { type: String, index: true },
     isIntlMarket: Boolean,
     baseCurrency: String,
     nextCurrency: String,
-    createdAt: Date,
+    createdAt: { type: Date, index: true },
     volume: decimalType,
     last: decimalType,
     high: decimalType,

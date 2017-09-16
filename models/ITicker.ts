@@ -1,7 +1,6 @@
 export default interface ITicker {
     code: string;
     market: string;
-    marketName: string;
     isIntlMarket: boolean;
     baseCurrency: string;
     nextCurrency: string;
