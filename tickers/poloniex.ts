@@ -8,7 +8,7 @@ export default class PoloniexTicker extends TickAPIProvider implements ITickAPIP
     public static readonly baseCurrencies: string[] = ['USDT', 'BTC', 'ETH'];
     public readonly baseURL: string;
 
-    constructor(baseURL: string) {
+    constructor(baseURL: string = 'https://poloniex.com') {
         super();
         this.baseURL = baseURL;
     }

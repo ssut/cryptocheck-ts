@@ -27,7 +27,7 @@ export default class BittrexTicker extends TickAPIProvider implements ITickAPIPr
     public static readonly baseCurrencies: string[] = ['USDT', 'BTC', 'ETH'];
     public readonly baseURL: string;
 
-    constructor(baseURL: string) {
+    constructor(baseURL: string = 'https://bittrex.com') {
         super();
         this.baseURL = baseURL;
     }
