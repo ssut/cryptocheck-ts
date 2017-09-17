@@ -9,12 +9,13 @@ const decimalSetter = (val) => Decimal(val).toFixed();
 const decimalType = { type: String, get: decimalGetter, set: decimalSetter };
 
 const tickerSchema = new mongoose.Schema({
-    code: { type: String, index: true },
+    uniqueId: { type: String, index: true },
+    code: { type: String },
     market: { type: String, index: true },
-    isIntlMarket: Boolean,
-    baseCurrency: String,
-    nextCurrency: String,
-    createdAt: { type: Date, index: true },
+    isIntlMarket: { type: Boolean, default: false },
+    baseCurrency: { type: String, index: true },
+    nextCurrency: { type: String, index: true },
+    createdAt: { type: Date, default: Date.now, index: true },
     volume: decimalType,
     last: decimalType,
     high: decimalType,
@@ -26,6 +27,7 @@ tickerSchema.pre('save', function(next) {
     if (this.createdAt === undefined) {
         this.createdAt = new Date();
     }
+    this.uniqueId = `${this.market}@${this.code}`;
     next();
 });
 
