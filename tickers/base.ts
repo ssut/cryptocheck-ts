@@ -5,7 +5,7 @@ export interface ITickAPIProvider {
 
     baseURL: string;
 
-    getPrices(path: string): Promise<object|string>;
+    getPrices(path?: string): Promise<object|string>;
     parse(data: object|string): Promise<ITicker>;
 
 };

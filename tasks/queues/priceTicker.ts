@@ -1,6 +1,7 @@
 import { Queue } from '..';
 import * as mongoose from 'mongoose';
 import { Ticker } from '../../models/Ticker';
+import { ITickAPIProvider } from './../../tickers/base';
 import {
     CoinoneTicker,
     BithumbTicker,
@@ -22,13 +23,14 @@ const tickers = {
     bittrex: new BittrexTicker(),
 };
 
-export const coinoneTicker = new Queue('coinoneTicker', async (job) => {
-    const data = await tickers.coinone.getPrices().then((x) => tickers.coinone.parse(x));
+const fetchAndPush = async (market: string, ticker: ITickAPIProvider, intlMarket?: boolean) => {
+    const data = await ticker.getPrices().then((x) => ticker.parse(x));
     const promises = [];
     for (const [key, info] of Object.entries(data.details)) {
         const t = new Ticker({
+            market,
             code: key,
-            market: 'coinone',
+            isIntlMarket: !!intlMarket,
             baseCurrency: info.baseCurrency,
             nextCurrency: info.nextCurrency,
             volume: info.volume,
@@ -36,5 +38,14 @@ export const coinoneTicker = new Queue('coinoneTicker', async (job) => {
         });
         promises.push(t.save());
     }
-    return Promise.all(promises);
-});
+    await Promise.all(promises);
+};
+
+export const coinoneTicker = new Queue('coinoneTicker', async (job) =>
+    fetchAndPush('coinone', tickers.coinone));
+
+export const bithumbTicker = new Queue('bithumbTicker', async (job) =>
+    fetchAndPush('bithumb', tickers.bithumb));
+
+export const poloniexTicker = new Queue('poloniexTicker', async (job) =>
+    fetchAndPush('poloniex', tickers.poloniex));
