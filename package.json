@@ -33,6 +33,7 @@
         "logplease": "^1.2.14",
         "micro": "^9.0.0",
         "microrouter": "latest",
+        "moment": "^2.18.1",
         "mongoose": "^4.11.11",
         "mysql": "^2.14.1",
         "reflect-metadata": "^0.1.10",
@@ -40,6 +41,7 @@
     },
     "devDependencies": {
         "@types/cron": "^1.2.1",
+        "@types/moment": "^2.13.0",
         "@types/mongoose": "^4.7.21",
         "@types/node": "^8.0.27",
         "@types/sinon": "^2.3.3",

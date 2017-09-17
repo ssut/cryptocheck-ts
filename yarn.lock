@@ -54,6 +54,12 @@
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@types/cron/-/cron-1.2.1.tgz#95c1e432d6106ca34c92f0743638bc786c073faa"
 
+"@types/moment@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+  dependencies:
+    moment "*"
+
 "@types/mongodb@*":
   version "2.2.11"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-2.2.11.tgz#595cd869afa1c4cf6ee8935eb25a0783ab46e6aa"
@@ -2524,7 +2530,7 @@ moment-timezone@^0.5.x:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0":
+moment@*, "moment@>= 2.9.0", moment@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
