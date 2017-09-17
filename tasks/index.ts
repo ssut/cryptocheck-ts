@@ -62,7 +62,7 @@ export class Queue {
         });
     }
 
-    public async invokeAndWait(args?: any): Promise<any> {
+    public async invokeAndWait(timeout: number = 3000, args?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             const job = this.queue.createJob(args);
             job.on('succeeded', (result) => resolve({
@@ -70,7 +70,7 @@ export class Queue {
                 id: job.id,
             }));
             job.on('failed', (_, err) => reject(err));
-            job.save((err) => {
+            job.timeout(timeout).save((err) => {
                 if (err) {
                     return reject(err);
                 }

@@ -22,7 +22,7 @@ const addSchedule = (queue: Queue, interval: number) => {
 };
 
 logger.info('Scheduling jobs of queues..');
-addSchedule(queues.test, 5 * S);
 addSchedule(queues.coinoneTicker, 5 * S);
 addSchedule(queues.bithumbTicker, 5 * S);
 addSchedule(queues.poloniexTicker, 5 * S);
+addSchedule(queues.bittrexTicker, 5 * S);

@@ -27,16 +27,13 @@ const fetchAndPush = async (market: string, ticker: ITickAPIProvider, intlMarket
     const data = await ticker.getPrices().then((x) => ticker.parse(x));
     const promises = [];
     for (const [key, info] of Object.entries(data.details)) {
-        const t = new Ticker({
+        const promise = Ticker.push({
             market,
             code: key,
             isIntlMarket: !!intlMarket,
-            baseCurrency: info.baseCurrency,
-            nextCurrency: info.nextCurrency,
-            volume: info.volume,
-            ...info.value,
+            values: info,
         });
-        promises.push(t.save());
+        promises.push(promise);
     }
     await Promise.all(promises);
 };
@@ -48,4 +45,7 @@ export const bithumbTicker = new Queue('bithumbTicker', async (job) =>
     fetchAndPush('bithumb', tickers.bithumb));
 
 export const poloniexTicker = new Queue('poloniexTicker', async (job) =>
-    fetchAndPush('poloniex', tickers.poloniex));
+    fetchAndPush('poloniex', tickers.poloniex, true));
+
+export const bittrexTicker = new Queue('bittrexTicker', async (job) =>
+    fetchAndPush('bittrex', tickers.bittrex, true));
