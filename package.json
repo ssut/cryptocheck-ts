@@ -16,9 +16,13 @@
         "failFast": true,
         "failWithoutAssertions": false
     },
+    "nodemonConfig": {
+        "ignore": ["out/tests/*"]
+    },
     "scripts": {
-        "start": "NODE_ENV=production micro out",
-        "dev": "NODE_ENV=development micro-dev out",
+        "ts": "tsc -w -p .",
+        "start": "NODE_ENV=production node out/index.js",
+        "dev": "NODE_ENV=development ./node_modules/.bin/nodemon out/index.js",
         "test": "NODE_ENV=development ava",
         "worker": "node out/tasks",
         "scheduler": "node out/tasks/scheduler",
@@ -30,9 +34,11 @@
         "cheerio": "^1.0.0-rc.2",
         "cron": "^1.3.0",
         "decimal.js": "^7.2.4",
+        "kcors": "2",
+        "koa": "^2.3.0",
+        "koa-logger": "^3.0.1",
+        "koa-router": "^7.2.1",
         "logplease": "^1.2.14",
-        "micro": "^9.0.0",
-        "microrouter": "latest",
         "moment": "^2.18.1",
         "mongoose": "^4.11.11",
         "mysql": "^2.14.1",
@@ -41,6 +47,9 @@
     },
     "devDependencies": {
         "@types/cron": "^1.2.1",
+        "@types/kcors": "^2.2.1",
+        "@types/koa": "^2.0.39",
+        "@types/koa-router": "^7.0.23",
         "@types/moment": "^2.13.0",
         "@types/mongoose": "^4.7.21",
         "@types/node": "^8.0.27",
@@ -48,7 +57,7 @@
         "ava": "^0.22.0",
         "axios-mock-adapter": "^1.9.0",
         "eslint": "^4.6.1",
-        "micro-dev": "^1.2.3",
+        "nodemon": "^1.12.1",
         "sinon": "^3.2.1",
         "source-map-support": "^0.4.17"
     }
