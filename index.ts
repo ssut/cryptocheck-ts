@@ -9,6 +9,7 @@ import * as tickers from './tickers';
 import { Ticker } from './models/Ticker';
 import routing from './routes';
 import socketing from './sockets';
+import { IWebSocketServer } from './sockets';
 (mongoose as any).Promise = Promise;
 
 const mongoOptions: mongoose.ConnectionOptions = {
@@ -27,7 +28,7 @@ routing(app);
 const server = http.createServer(app.callback());
 const wss = new WebSocket.Server({ server });
 
-socketing(wss);
+socketing(wss as IWebSocketServer);
 
 server.listen(process.env.PORT || 3000, () =>
     console.log(`✅  The server is running..`));
