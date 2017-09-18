@@ -17,7 +17,9 @@
         "failWithoutAssertions": false
     },
     "nodemonConfig": {
-        "ignore": ["out/tests/*"]
+        "ignore": [
+            "out/tests/*"
+        ]
     },
     "scripts": {
         "ts": "tsc -w -p .",
@@ -38,12 +40,13 @@
         "koa": "^2.3.0",
         "koa-logger": "^3.0.1",
         "koa-router": "^7.2.1",
-        "logplease": "^1.2.14",
         "moment": "^2.18.1",
         "mongoose": "^4.11.11",
         "mysql": "^2.14.1",
+        "pino": "^4.7.2",
         "reflect-metadata": "^0.1.10",
-        "sleep-promise": "^2.0.0"
+        "sleep-promise": "^2.0.0",
+        "socket.io": "^2.0.3"
     },
     "devDependencies": {
         "@types/cron": "^1.2.1",
@@ -53,7 +56,9 @@
         "@types/moment": "^2.13.0",
         "@types/mongoose": "^4.7.21",
         "@types/node": "^8.0.27",
+        "@types/pino": "^4.7.0",
         "@types/sinon": "^2.3.3",
+        "@types/socket.io": "^1.4.30",
         "ava": "^0.22.0",
         "axios-mock-adapter": "^1.9.0",
         "eslint": "^4.6.1",

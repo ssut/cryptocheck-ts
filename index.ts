@@ -2,10 +2,11 @@ import 'source-map-support/register';
 import * as Koa from 'koa';
 import * as KoaLogger from 'koa-logger';
 import * as KoaCors from 'kcors';
+import * as socket from 'socket.io';
+import * as http from 'http';
 import * as mongoose from 'mongoose';
 import * as tickers from './tickers';
 import { Ticker } from './models/Ticker';
-import { test } from './tasks/queues';
 import routing from './routes';
 (mongoose as any).Promise = Promise;
 
@@ -22,7 +23,10 @@ app.use(KoaLogger())
 
 routing(app);
 
-app.listen(process.env.PORT || 3000, () =>
+const server = http.createServer(app.callback());
+const io = socket(server);
+
+server.listen(process.env.PORT || 3000, () =>
     console.log(`✅  The server is running..`));
 
-export default app;
+export default server;
