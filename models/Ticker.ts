@@ -67,7 +67,7 @@ tickerSchema.statics.getLatestRecords = function(args: IGetLatestRecordsArgs): P
         { $group: {
             _id: '$uniqueId',
             createdAtByDate: { $last: '$createdAtByDate' },
-            lastUpdatedAt: { $first: '$lastUpdatedAt' },
+            lastUpdatedAt: { $last: '$lastUpdatedAt' },
             code: { $first: '$code' },
             market: { $first: '$market' },
             isIntlMarket: { $first: '$isIntlMarket' },
