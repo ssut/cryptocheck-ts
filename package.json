@@ -46,7 +46,7 @@
         "pino": "^4.7.2",
         "reflect-metadata": "^0.1.10",
         "sleep-promise": "^2.0.0",
-        "socket.io": "^2.0.3"
+        "ws": "^3.2.0"
     },
     "devDependencies": {
         "@types/cron": "^1.2.1",
@@ -58,12 +58,16 @@
         "@types/node": "^8.0.27",
         "@types/pino": "^4.7.0",
         "@types/sinon": "^2.3.3",
-        "@types/socket.io": "^1.4.30",
+        "@types/ws": "^3.0.2",
         "ava": "^0.22.0",
         "axios-mock-adapter": "^1.9.0",
         "eslint": "^4.6.1",
         "nodemon": "^1.12.1",
         "sinon": "^3.2.1",
         "source-map-support": "^0.4.17"
+    },
+    "optionalDependencies": {
+        "bufferutil": "^3.0.2",
+        "utf-8-validate": "^3.0.3"
     }
 }
