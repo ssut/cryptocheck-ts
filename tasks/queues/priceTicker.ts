@@ -35,17 +35,17 @@ const fetchAndPush = async (market: string, ticker: ITickAPIProvider, intlMarket
         });
         promises.push(promise);
     }
-    await Promise.all(promises);
+    return await Promise.all(promises);
 };
 
-export const coinoneTicker = new Queue('coinoneTicker', async (job) =>
+export const coinoneTicker = new Queue('coinoneTicker', async () =>
     fetchAndPush('coinone', tickers.coinone));
 
-export const bithumbTicker = new Queue('bithumbTicker', async (job) =>
+export const bithumbTicker = new Queue('bithumbTicker', async () =>
     fetchAndPush('bithumb', tickers.bithumb));
 
-export const poloniexTicker = new Queue('poloniexTicker', async (job) =>
+export const poloniexTicker = new Queue('poloniexTicker', async () =>
     fetchAndPush('poloniex', tickers.poloniex, true));
 
-export const bittrexTicker = new Queue('bittrexTicker', async (job) =>
+export const bittrexTicker = new Queue('bittrexTicker', async () =>
     fetchAndPush('bittrex', tickers.bittrex, true));

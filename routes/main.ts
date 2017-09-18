@@ -10,5 +10,4 @@ router.get('/', async (ctx) => {
     });
 });
 
-console.log(router);
 export default router;

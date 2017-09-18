@@ -8,7 +8,7 @@ export interface ITickAPIProvider {
     getPrices(path?: string): Promise<object|string>;
     parse(data: object|string): Promise<ITicker>;
 
-};
+}
 
 export class TickAPIProvider {
 
@@ -18,4 +18,4 @@ export class TickAPIProvider {
         return await axios.get(`${this.baseURL}${path}`).then((resp) => resp.data);
     }
 
-};
+}

@@ -1,90 +1,70 @@
-import * as BeeQueue from 'bee-queue';
-import * as Logger from 'logplease';
+import axios from 'axios';
+import * as Pino from 'pino';
 
-const logger = Logger.create('TaskRunner');
+const pino = Pino();
+const pretty = Pino.pretty();
+pretty.pipe(process.stdout);
+const log = Pino({
+  name: 'app',
+  safe: true,
+}, pretty);
 
-export interface IQueueResult {
-    id: number;
-    result: any;
-}
-
-export interface IBeeQueueJob {
-    id: number|undefined;
-    data: object;
-    status?: string;
-    options?: any;
-    queue?: BeeQueue;
-    progress?: number;
-}
+const logWithDuration = (func, name: string, hr: [number, number], id: number): void => {
+    const measured = process.hrtime(hr);
+    const [ seconds, milliseconds ] = [measured[0], measured[1] / 1000000];
+    log.info('[Runner] %s took %ds %dms.. #%d', name, seconds, milliseconds, id);
+};
 
 export class Queue {
 
     public readonly name: string;
-    private readonly queue: BeeQueue;
-    private readonly func: (job: any) => any;
+    public readonly waitFinished: boolean;
+    private readonly func: () => Promise<any>;
+    private id: NodeJS.Timer;
+    private counter: number;
+    private running: boolean;
 
-    constructor(name: string, func: (job: any) => any) {
+    constructor(name: string, func: () => Promise<any>, waitFinished: boolean = true) {
         this.name = name;
-        this.queue = new BeeQueue(name);
         this.func = func;
+        this.waitFinished = waitFinished;
+        this.counter = 0;
+        this.running = false;
     }
 
-    public start(): void {
-        this.queue.on('ready', () => {
-            this.queue.process((job: any) => {
-                logger.info(`#${job.id} from the Queue ${this.name} has invoked..`);
-                const post = this.func(job);
-                return post;
+    public start(interval: number = 5000): boolean {
+        log.info('[Scheduler] Scheduling `%s`..', this.name);
+        this.id = setInterval(() => {
+            if (this.waitFinished && this.running) {
+                log.warn('[Runner] Skipping %s because of waitFinished', this.name);
+                return;
+            }
+
+            const id = ++this.counter;
+            this.running = true;
+            log.info('[Runner] Executing %s.. #%d', this.name, id);
+            const start = process.hrtime();
+            this.func().then(() => {
+                this.running = false;
+                logWithDuration(log.info, this.name, start, id);
+            }).catch((err) => {
+                this.running = false;
+                log.child({ name: this.name, id }).error(err);
+                logWithDuration(log.warn, this.name, start, id);
             });
-            logger.info(`Queue ${this.name} is ready to process..`);
-        });
-    }
+        }, interval);
 
-    public async getJob(id: number): Promise<IBeeQueueJob|undefined> {
-        return await this.queue.getJob(id).then((job: IBeeQueueJob): IBeeQueueJob => ({
-            id: job.id,
-            data: job.data,
-            status: job.status,
-            options: job.options,
-        }));
-    }
-
-    public invoke(args?: any): Promise<number> {
-        return new Promise((resolve, reject) => {
-            const job = this.queue.createJob(args);
-
-            job.save((err, { id }) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(id);
-            });
-        });
-    }
-
-    public async invokeAndWait(timeout: number = 3000, args?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const job = this.queue.createJob(args);
-            job.on('succeeded', (result) => resolve({
-                result,
-                id: job.id,
-            }));
-            job.on('failed', (_, err) => reject(err));
-            job.timeout(timeout).save((err) => {
-                if (err) {
-                    return reject(err);
-                }
-            });
-        });
+        return !!this.id;
     }
 
 }
 
 if (require.main === module) {
-    logger.info('Starting queues...');
+    log.info('[Initializer] Starting queues...');
+    axios.defaults.timeout = 5000;
     const queues = require('./queues');
     for (const [name, queue] of Object.entries(queues)) {
-        logger.info(`Preparing Queue ${name}..`);
+        log.info(`[Initializer] Preparing Queue ${name}..`);
         queue.start();
     }
 }
