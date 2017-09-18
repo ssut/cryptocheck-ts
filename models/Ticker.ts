@@ -73,7 +73,7 @@ tickerSchema.statics.getLatestRecords = function(args: IGetLatestRecordsArgs): P
             isIntlMarket: { $first: '$isIntlMarket' },
             baseCurrency: { $first: '$baseCurrency' },
             nextCurrency: { $first: '$nextCurrency' },
-            last: { $first: '$last' },
+            last: { $last: '$last' },
         } },
         { $project: {
             uniqueId: '$_id',
