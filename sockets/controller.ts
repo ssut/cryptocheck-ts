@@ -37,7 +37,9 @@ export default class SocketDataController {
     }
 
     public send(data: any): void {
-        this.ws.send(JSON.stringify(data));
+        this.ws.send(JSON.stringify(data), (err: Error) => {
+            console.error(err);
+        });
     }
 
     public sendOk(msg: string, data?: any): void {
