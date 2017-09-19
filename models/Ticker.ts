@@ -13,6 +13,7 @@ export interface IPushArgs {
 }
 export interface IGetLatestRecordsArgs {
     market?: string[];
+    uniqueId?: string[];
     baseCurrency?: string[];
     nextCurrency?: string[];
 }
@@ -62,8 +63,9 @@ tickerSchema.statics.getLatestRecords = function(args: IGetLatestRecordsArgs): P
         }
     }
 
-    const query = this.aggregate([
-        { $match: conditions },
+    const query = this.aggregate(((Object.keys(conditions).length > 0 ? [{
+        $match: conditions,
+    }] : []) as any).concat([
         { $group: {
             _id: '$uniqueId',
             createdAtByDate: { $last: '$createdAtByDate' },
@@ -87,7 +89,7 @@ tickerSchema.statics.getLatestRecords = function(args: IGetLatestRecordsArgs): P
             value: '$last',
             volume: '$last.volume',
         } },
-    ]);
+    ]));
 
     return query;
 };
@@ -112,15 +114,19 @@ tickerSchema.statics.push = function(args: IPushArgs): Promise<any[]> {
     }, values.value);
 
     const query = (this as mongoose.Query<ITickerModel>).findOneAndUpdate({
-        market,
         uniqueId,
         createdAtByDate,
     }, {
-        $set: {
+        $setOnInsert: {
+            uniqueId,
+            createdAtByDate,
+            market,
             code,
             isIntlMarket,
             baseCurrency: values.baseCurrency,
             nextCurrency: values.nextCurrency,
+        },
+        $set: {
             lastUpdatedAt: now.toDate(),
             last: value,
             [`values.${currentHour}.${currentMinute}.${currentSecond}`]: value,
