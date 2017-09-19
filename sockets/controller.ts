@@ -8,10 +8,7 @@ export interface IWebSocketConnection extends WebSocket {
     };
 }
 
-export type WebSocketControllerAction = (data: any) => IWebSocketControllerActionResponse;
-
-export interface IWebSocketControllerActionResponse {
-    exec?: string;
+export type WebSocketControllerAction = (self: SocketDataController, data: any) => void;
 }
 
 export interface IData {
@@ -35,23 +32,32 @@ export default class SocketDataController {
         this.ws = ws as IWebSocketConnection;
         this.request = request;
 
+        this.ws.context = {};
         this.ws.on('message', this.onMessage.bind(this));
     }
 
-    get context(): any {
-        return this.ws.context || {};
+    public send(data: any): void {
+        this.ws.send(JSON.stringify(data));
     }
 
-    public getContext(key: string): any {
+    public sendOk(msg: string, data?: any): void {
+        this.send({ ok: true, data: msg, returns: data });
+    }
+
+    public sendError(msg: string): void {
+        this.send({ ok: false, data: msg });
+    }
+
+    get context(): any {
+        return this.ws.context;
+    }
+
+    public getContext(key: string): any|undefined {
         return this.ws.context[key];
     }
 
-    private setContext(ctx: object): void {
+    public setContext(ctx: object): void {
         this.ws.context = Object.assign(ctx, this.ws.context);
-    }
-
-    private send(data: any): void {
-        this.ws.send(JSON.stringify(data));
     }
 
     private onMessage(data: WebSocket.Data): void {
@@ -60,13 +66,15 @@ export default class SocketDataController {
             if (msg.msg === undefined) {
                 throw new SyntaxError();
             } else if (SocketDataController.actions.hasOwnProperty(msg.msg)) {
-                const result = SocketDataController.actions[msg.msg](msg.data);
+                SocketDataController.actions[msg.msg](this, msg.data);
             } else {
-                this.send({ ok: false, data: `no action found in ${msg.msg}` });
+                this.sendError(`no action found in ${msg.msg}`);
             }
         } catch (err) {
             if (err instanceof SyntaxError) {
                 return;
+            } else {
+                this.sendError('unable to handle the requested context');
             }
             console.error(err);
         }
