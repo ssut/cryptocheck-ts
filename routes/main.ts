@@ -6,7 +6,8 @@ router.prefix('/');
 
 router.get('/', async (ctx) => {
     ctx.body = await Ticker.getLatestRecords({
-        baseCurrency: ['KRW'],
+        uniqueId: ['bittrex@USDT_ETH'],
+        // baseCurrency: ['KRW'],
     });
 });
 

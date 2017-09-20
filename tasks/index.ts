@@ -9,10 +9,10 @@ const log = Pino({
   safe: true,
 }, pretty);
 
-const logWithDuration = (func, name: string, hr: [number, number], id: number): void => {
+const logWithDuration = (func: Pino.LogFn, name: string, hr: [number, number], id: number): void => {
     const measured = process.hrtime(hr);
     const [ seconds, milliseconds ] = [measured[0], measured[1] / 1000000];
-    log.info('[Runner] %s took %ds %dms.. #%d', name, seconds, milliseconds, id);
+    func('[Runner] %s took %ds %dms.. #%d', name, seconds, milliseconds, id);
 };
 
 export class Queue {
@@ -46,11 +46,11 @@ export class Queue {
             const start = process.hrtime();
             this.func().then(() => {
                 this.running = false;
-                logWithDuration(log.info, this.name, start, id);
+                logWithDuration(log.info.bind(log), this.name, start, id);
             }).catch((err) => {
                 this.running = false;
                 log.child({ name: this.name, id }).error(err);
-                logWithDuration(log.warn, this.name, start, id);
+                logWithDuration(log.warn.bind(log), this.name, start, id);
             });
         }, interval);
 

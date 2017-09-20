@@ -9,7 +9,6 @@ export interface IWebSocketConnection extends WebSocket {
 }
 
 export type WebSocketControllerAction = (self: SocketDataController, data: any) => void;
-}
 
 export interface IData {
     msg: string;

@@ -1,8 +1,10 @@
+import { getNearestNumber } from './../utils/timetable';
 import * as mongoose from 'mongoose';
 import * as moment from 'moment';
 import ITicker from './ITicker';
 import { ITickerValue } from './ITicker';
 import * as Decimal from 'decimal.js';
+import { createTimeMap } from './../utils';
 import { ITickerItem } from '../tickers/models';
 
 export interface IPushArgs {
@@ -36,13 +38,10 @@ const tickerSchema = new mongoose.Schema({
     nextCurrency: { type: String, index: true },
     createdAtByDate: { type: Date, index: true },
     lastUpdatedAt: { type: Date, index: true },
-    values: Object,
-    last: Object,
-//     volume: decimalType,
-//     last: decimalType,
-//     high: decimalType,
-//     low: decimalType,
-//     first: decimalType,
+    count: Number,
+    values: [mongoose.Schema.Types.Mixed],
+    times: [Date],
+    last: mongoose.Schema.Types.Mixed,
 });
 
 tickerSchema.pre('save', function(next) {
@@ -94,12 +93,16 @@ tickerSchema.statics.getLatestRecords = function(args: IGetLatestRecordsArgs): P
     return query;
 };
 
-tickerSchema.statics.push = function(args: IPushArgs): Promise<any[]> {
+tickerSchema.statics.push = async function(args: IPushArgs): Promise<any[]> {
+    const self = this as mongoose.Query<ITickerModel>;
     const now: moment.Moment = moment();
     const createdAtByDate: Date = now.clone().startOf('date').toDate();
     const currentHour: number = now.get('hour');
     const currentMinute: number = now.get('minute');
     const currentSecond: number = now.get('second');
+    const currentNearestSecond: number = getNearestNumber(currentSecond, 5);
+    const normNow: Date = now.clone()
+        .set('ms', 0).set('s', currentNearestSecond).toDate();
 
     const {
         market,
@@ -113,11 +116,24 @@ tickerSchema.statics.push = function(args: IPushArgs): Promise<any[]> {
         volume: values.volume,
     }, values.value);
 
-    const query = (this as mongoose.Query<ITickerModel>).findOneAndUpdate({
-        uniqueId,
-        createdAtByDate,
-    }, {
-        $setOnInsert: {
+    const cond = { uniqueId, createdAtByDate };
+    const $set = {
+        lastUpdatedAt: now.toDate(),
+        last: value,
+    };
+    const $push = {
+        values: value,
+        times: normNow,
+    };
+    const $inc = {
+        count: 1,
+    };
+
+    let pending;
+    if (await self.count(cond) > 0) {
+        pending = self.findOneAndUpdate(cond, { $set, $push, $inc });
+    } else { // if zero
+        const $setOnInsert = {
             uniqueId,
             createdAtByDate,
             market,
@@ -125,17 +141,18 @@ tickerSchema.statics.push = function(args: IPushArgs): Promise<any[]> {
             isIntlMarket,
             baseCurrency: values.baseCurrency,
             nextCurrency: values.nextCurrency,
-        },
-        $set: {
-            lastUpdatedAt: now.toDate(),
-            last: value,
-            [`values.${currentHour}.${currentMinute}.${currentSecond}`]: value,
-        },
-    }, { setDefaultsOnInsert: true, upsert: true });
+            values: [$push.values],
+            times: [$push.times],
+        };
+        const ticker = new Ticker({
+            ...$set,
+            ...$setOnInsert,
+            ...$inc,
+        });
+        pending = ticker.save();
+    }
 
-    return Promise.all([
-        query,
-    ]);
+    return pending;
 };
 
 export const Ticker: ITickerModel =

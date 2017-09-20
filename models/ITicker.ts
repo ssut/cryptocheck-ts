@@ -24,9 +24,9 @@ export default interface ITicker {
     /** Last updated date */
     lastUpdatedAt: Date;
     /** Time-series values */
-    values: {
-        [key: number]: ITickerValue,
-    };
+    count: number;
+    values: ITickerValue[];
+    times: Date[];
     /** last values */
     last: ITickerValue;
 }
